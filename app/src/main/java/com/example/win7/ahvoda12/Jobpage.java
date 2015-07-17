@@ -6,6 +6,7 @@ package com.example.win7.ahvoda12;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -15,10 +16,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.*;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,7 +38,7 @@ public class Jobpage extends AppCompatActivity
         super.onCreate(bundle);
         setContentView(R.layout.jobpage);
         ListView list = (ListView)findViewById(R.id.JobList);
-/*        Intent startingIntent = getIntent();
+        Intent startingIntent = getIntent();
         String Authenticationinfo = startingIntent.getStringExtra("Authinfo");
 
 
@@ -70,13 +75,17 @@ public class Jobpage extends AppCompatActivity
 
             JSONObject jsonRootObject = new JSONObject(postresult);
 
-            System.out.print(jsonRootObject+"    At Least this is fine");
+            System.out.print(jsonRootObject + "    At Least this is fine");
 
             JSONArray jsonArray = jsonRootObject.getJSONArray("listings");
 
             System.out.println(jsonArray);
 
+            float lat= 0.1f;
 
+            float lng= 0.1f;
+
+            LatLng store;
 
 
             try{
@@ -87,11 +96,19 @@ public class Jobpage extends AppCompatActivity
 
                 for (int i=0;i<jsonArray.length();i++){
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    ListingArray[i].restaurantName = jsonObject.getJSONObject("business").getJSONObject("location").getJSONObject("name").toString();
+                    ListingArray[i]= new Listing();
+                    ListingArray[i].restaurantName = jsonObject.getJSONObject("business").optString("name").toString();
                     System.out.print(ListingArray[i].restaurantName);
-                    ListingArray[i].position = jsonObject.getJSONObject("business").getJSONObject("position").getJSONObject("name").toString();
+                    ListingArray[i].position = jsonObject.getJSONObject("position").optString("name").toString();
                     System.out.print(ListingArray[i].position);
-                    ListingArray[i].hourlyPay = Float.parseFloat(jsonObject.getJSONObject("business").getJSONObject("position").toString());
+                    ListingArray[i].hourlyPay = Float.parseFloat(jsonObject.optString("pay").toString());
+                    lat = Float.parseFloat(jsonObject.getJSONObject("business").getJSONObject("location").getJSONObject("location").optString("latitude").toString());
+                    lng = Float.parseFloat(jsonObject.getJSONObject("business").getJSONObject("location").getJSONObject("location").optString("longitude").toString());
+                    store = new LatLng(lat,lng);
+                    ListingArray[i].location=store;
+                    ListingArray[i].Description=jsonObject.getJSONObject("business").optString("details");
+
+
                 }
 
 
@@ -128,10 +145,33 @@ public class Jobpage extends AppCompatActivity
             Log.v("Track", ("Error: " + e));
 
 
-        } */
+        }
 
 
-        String as[] = new String[2];
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+
+
+                Log.v("Track","Its alive");
+
+                Listing passObject = (Listing)parent.getItemAtPosition(position);
+
+
+                Intent intent = new Intent("com.example.win7.ahvoda12.INFOPAGE");
+                intent.putExtra("passObject",passObject);
+                startActivity(intent);
+
+
+            }
+
+
+
+        });
+
+
+
+ /*       String as[] = new String[2];
         as[0] = "Brigade      DishWasher                $15/h";
         as[1] = "Brigade      DishWasher                $15/h";
 
@@ -159,7 +199,7 @@ public class Jobpage extends AppCompatActivity
 
 
 
-        });
+        }); */
 
 
 

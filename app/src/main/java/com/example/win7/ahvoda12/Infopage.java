@@ -40,13 +40,17 @@ public class Infopage extends AppCompatActivity
     {
         super.onCreate(bundle);
         setContentView(R.layout.infopage);
+        Intent startingintent= getIntent();
+        Listing listingValue = (Listing)startingintent.getSerializableExtra("passObject");
+
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
          JobDescription = (TextView)findViewById(R.id.textView4);
          acceptButton = (ImageButton)findViewById(R.id.imageButton1);
          JobPosition = (TextView)findViewById(R.id.JobPosition);
-         Store = new LatLng(45.499632,-73.57445);
+ //        Store = new LatLng(45.499632,-73.57445);
+         Store = listingValue.getLocation();
          Rating = (TextView)findViewById(R.id.Rating);
          Rate = (TextView)findViewById(R.id.HourlyRate);
 
@@ -54,16 +58,15 @@ public class Infopage extends AppCompatActivity
         mymap.setMyLocationEnabled(true);
         mymap.getUiSettings().setMyLocationButtonEnabled(false);
         mymap.addMarker(new MarkerOptions()
-                .position(new LatLng(45.499632, -73.57445))
-                .title("Brigade Pizza"));
+                .position(Store));
         mymap.animateCamera(CameraUpdateFactory.newLatLngZoom(Store,
                 13));
 
-        JobPosition.setText("DishWasher");
+        JobPosition.setText(listingValue.getPosition());
         Rating.setText("80");
-        Rate.setText("$15");
+        Rate.setText(String.valueOf(listingValue.getHourlyPay()));
 
-        JobDescription.setText("Description:" +"\n"+"\n" + "The Worker will be required to clean Dishes at the Restaurant for the next three Hours" + "\n" +"\n"+"Duration: 3 hours" + "\n" +"\n"+"Total Calculated Pay: $45"+"\n"+"\n"+"Distance:500m"+"\n"+"Time:7min");
+        JobDescription.setText(listingValue.getDescription()+"Distance:500m"+"\n"+"Time:7min");
 
 
         acceptButton.setOnClickListener(new android.view.View.OnClickListener() {

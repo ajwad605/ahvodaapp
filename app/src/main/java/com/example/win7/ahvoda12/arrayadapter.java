@@ -25,11 +25,15 @@ public class arrayadapter extends ArrayAdapter<Listing> {
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         View adapterview = inflater.inflate(R.layout.adapterview, parent, false);
-        TextView Restoname = (TextView)adapterview.findViewById(R.id.view1);
-        TextView Title = (TextView)adapterview.findViewById(R.id.view2);
-        TextView hourlywage=(TextView)adapterview.findViewById(R.id.view3);
+        TextView restaurantName = (TextView)adapterview.findViewById(R.id.view1);
+        TextView title = (TextView)adapterview.findViewById(R.id.view2);
+        TextView hourlyWage=(TextView)adapterview.findViewById(R.id.view3);
 
+        Listing listing = getItem(position);
 
+        restaurantName.setText(listing.getRestaurantName());
+        title.setText(listing.getPosition());
+        hourlyWage.setText(String.valueOf(listing.getHourlyPay()));
 
         return adapterview;
     }
